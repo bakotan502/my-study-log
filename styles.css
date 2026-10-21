@@ -65,6 +65,10 @@ button {
   padding: 26px;
 }
 
+.recent-preview {
+  display: none;
+}
+
 .history-panel {
   padding: 24px;
 }
@@ -514,7 +518,109 @@ textarea:focus {
 @media (max-width: 560px) {
   .editor-panel,
   .history-panel {
-    padding: 18px;
+    padding: 14px;
+  }
+
+  .app-shell {
+    gap: 12px;
+    width: min(640px, calc(100% - 16px));
+    padding: 8px 0 16px;
+  }
+
+  .editor-panel {
+    position: static;
+  }
+
+  .brand-row {
+    margin-bottom: 12px;
+  }
+
+  h1 {
+    font-size: 2rem;
+  }
+
+  .diary-form {
+    gap: 8px;
+  }
+
+  .mood-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 4px;
+    margin-top: 6px;
+  }
+
+  .mood-option {
+    min-height: 58px;
+    gap: 2px;
+    padding: 3px 1px;
+    font-size: 0.62rem;
+    line-height: 1.2;
+  }
+
+  .mood-face {
+    font-size: 1.25rem;
+  }
+
+  textarea {
+    min-height: 72px;
+    padding: 8px;
+    line-height: 1.5;
+  }
+
+  .action-row {
+    margin-top: 2px;
+  }
+
+  .primary-button,
+  .ghost-button {
+    min-height: 38px;
+  }
+
+  .recent-preview {
+    display: grid;
+    gap: 6px;
+    margin-top: 12px;
+    border-top: 1px solid var(--line);
+    padding-top: 10px;
+  }
+
+  .recent-preview-heading {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .recent-preview-heading .eyebrow {
+    margin: 0;
+  }
+
+  .recent-preview-heading h2 {
+    font-size: 1rem;
+  }
+
+  .recent-preview-content {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 2px 8px;
+    color: var(--muted);
+    font-size: 0.78rem;
+    line-height: 1.4;
+  }
+
+  .recent-preview-mood {
+    white-space: nowrap;
+  }
+
+  .recent-preview-note {
+    grid-column: 1 / -1;
+    display: -webkit-box;
+    margin: 0;
+    overflow: hidden;
+    color: var(--ink);
+    overflow-wrap: anywhere;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
   }
 
   .brand-row,
@@ -527,14 +633,6 @@ textarea:focus {
   .save-state,
   .stats-strip {
     align-self: flex-start;
-  }
-
-  .mood-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .mood-option {
-    min-height: 76px;
   }
 
   .list-tools select {
