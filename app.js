@@ -2,12 +2,12 @@ const STORAGE_KEY = "tiny-diary.entries.v1";
 
 const moods = {
   happy: {
-    label: "うれしい",
+    label: "集中できた",
     face: "😊",
     score: 5,
   },
   calm: {
-    label: "おだやか",
+    label: "落ち着いて",
     face: "😌",
     score: 4,
   },
@@ -17,12 +17,12 @@ const moods = {
     score: 3,
   },
   tired: {
-    label: "つかれた",
+    label: "少し疲れた",
     face: "😵‍💫",
     score: 2,
   },
   sad: {
-    label: "しょんぼり",
+    label: "集中しにくい",
     face: "🥲",
     score: 1,
   },
@@ -44,6 +44,7 @@ const moodFilter = document.querySelector("#mood-filter");
 const rhythmChart = document.querySelector("#rhythm-chart");
 const biorhythmMessage = document.querySelector("#biorhythm-message");
 const biorhythmDetail = document.querySelector("#biorhythm-detail");
+const recentPreviewContent = document.querySelector("#recent-preview-content");
 
 let entries = loadEntries();
 
@@ -172,17 +173,39 @@ function renderEntries() {
   if (entries.length > 0 && filteredEntries.length === 0) {
     emptyState.innerHTML = `
       <strong>条件に合う記録がありません</strong>
-      <span>検索ワードや気分フィルターを変えてみてください。</span>
+      <span>検索ワードや調子のフィルターを変えてみてください。</span>
     `;
   } else {
     emptyState.innerHTML = `
-      <strong>まだ記録がありません</strong>
-      <span>今日の気分と一言メモを保存すると、ここに表示されます。</span>
+      <strong>まだ学習記録がありません</strong>
+      <span>数学や英単語の学習、読書メモなどを保存すると、ここで見返せます。</span>
     `;
   }
 
   emptyState.hidden = filteredEntries.length > 0;
   entryList.hidden = filteredEntries.length === 0;
+}
+
+function renderRecentPreview() {
+  const recentEntry = [...entries].sort((a, b) => b.date.localeCompare(a.date))[0];
+
+  if (!recentEntry) {
+    recentPreviewContent.textContent = "学習記録を保存すると、ここに表示されます。";
+    return;
+  }
+
+  const mood = moods[recentEntry.mood] ?? moods.normal;
+  const date = document.createElement("span");
+  date.className = "recent-preview-date";
+  date.textContent = formatDate(recentEntry.date);
+  const moodLabel = document.createElement("span");
+  moodLabel.className = "recent-preview-mood";
+  moodLabel.textContent = `${mood.face} ${mood.label}`;
+  const note = document.createElement("p");
+  note.className = "recent-preview-note";
+  note.textContent = recentEntry.note;
+
+  recentPreviewContent.replaceChildren(date, moodLabel, note);
 }
 
 function renderSummary() {
@@ -200,7 +223,7 @@ function renderBiorhythm() {
   if (entries.length === 0) {
     rhythmChart.innerHTML = "";
     biorhythmMessage.textContent = "記録を保存すると表示されます";
-    biorhythmDetail.textContent = "最近7件の気分を波形グラフで表示します。";
+    biorhythmDetail.textContent = "最近7件の学習時の調子を波形グラフで表示します。";
     return;
   }
 
@@ -267,7 +290,7 @@ function createBiorhythmSvg(recentEntries) {
       class="rhythm-svg"
       viewBox="0 0 ${width} ${height}"
       role="img"
-      aria-label="最近${recentEntries.length}件の気分バイオリズム"
+      aria-label="最近${recentEntries.length}件の学習時の調子"
     >
       <defs>
         <linearGradient id="rhythm-line-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -373,6 +396,7 @@ function render() {
   renderSummary();
   renderBiorhythm();
   renderEntries();
+  renderRecentPreview();
 }
 
 function resetForm() {
@@ -380,7 +404,7 @@ function resetForm() {
   dateInput.value = getTodayIso();
   clearSelectedMood();
   noteInput.value = "";
-  editingLabel.textContent = "今日の記録を書いています";
+  editingLabel.textContent = "今日の学習記録を書いています";
   updateCharCount();
   updateSaveState("未保存");
   renderBiorhythm();
@@ -453,7 +477,7 @@ dateInput.addEventListener("change", () => {
 
   clearSelectedMood();
   noteInput.value = "";
-  editingLabel.textContent = `${formatDate(dateInput.value)}の記録を書いています`;
+  editingLabel.textContent = `${formatDate(dateInput.value)}の学習記録を書いています`;
   updateCharCount();
   updateSaveState("未保存");
   renderBiorhythm();
